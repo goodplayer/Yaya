@@ -1,10 +1,14 @@
 package idgen
 
 import (
+	"errors"
 	"sync"
 	"time"
-	"errors"
 )
+
+type Idgen interface {
+	Next() []int64
+}
 
 type idgen struct {
 	sync.Mutex
@@ -46,12 +50,12 @@ func ConvertToString(id []int64) string {
 	data := make([]byte, 32)
 	p := id[0]
 	for i := 0; i < 16; i++ {
-		data[16 - 1 - i] = toHexChar(int(p & 0x0F))
+		data[16-1-i] = toHexChar(int(p & 0x0F))
 		p = p >> 4
 	}
 	p = id[1]
 	for i := 0; i < 16; i++ {
-		data[32 - 1 - i] = toHexChar(int(p & 0x0F))
+		data[32-1-i] = toHexChar(int(p & 0x0F))
 		p = p >> 4
 	}
 	return string(data)
